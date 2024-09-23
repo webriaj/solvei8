@@ -1,15 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Size-Ratio-Shade Table</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ENjdO4Dr2bkBIFxQpRAqDq2L8u0vnd6Q0XV5ZMDAh5PpvSs1Z8fPf16z/6M4PKF6" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
         th, td {
             border: 1px solid #ddd;
@@ -19,173 +20,207 @@
         th {
             background-color: #f2f2f2;
         }
-        form {
-            margin-bottom: 20px;
+        button {
+            margin-top: 10px;
         }
-        .form-group {
-            margin-bottom: 10px;
+        .form-control {
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
-<body>
+<body class="hidden">
     <div class="container">
-    <h1>Size-Ratio-Shade Table</h1>
-    
-    <form id="input-form">
-        <div class="form-group">
-            <label for="size-input">Size (e.g., S, M, L):</label>
-            <input type="text" id="size-input" placeholder="Enter Sizes separated by commas" required>
-        </div>
-        <div class="form-group">
-            <label for="ratio-input">Ratio (e.g., 2, 1, 2):</label>
-            <input type="text" id="ratio-input" placeholder="Enter Ratios separated by commas" required>
-        </div>
-        <div class="form-group">
-            <label for="shade-input">Shades (e.g., A,B,C):</label>
-            <input type="text" id="shade-input" placeholder="Enter Shades separated by commas" required>
-        </div>
-        <button type="submit">Submit</button>
-    </form>
-    <div class="allTableBtn row">
-        <button class="btn btn-primary col-4" id="downloadExcel">Excel</button>
-        <button class="btn btn-primary col-4" id="downloadPDF">PDF</button>
-      </div>
-    <table id="data-table">
-        <thead>
-            <tr>
-                <th>Size</th>
-                <th>Ratio</th>
-                <th>Shade</th>
-                <th>Group</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Rows will be inserted here by JavaScript -->
-        </tbody>
-    </table>
-</div>
-    <script>
-        function assignAlphabetToSizeRatio(data) {
-    const sizeRatioMap = {};
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let nextAlphabetIndex = 0;
+        <h1 class="text-center bg-dark text-white p-3">Tracki8 Tag Gen Helper</h1>
+        
+        <form id="input-form" class="mb-4">
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    <label for="size-input">Size (e.g., S, M, L):</label>
+                    <input type="text" id="size-input" class="form-control" placeholder="Enter Sizes separated by commas" required>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="ratio-input">Ratio (e.g., 2, 1, 2):</label>
+                    <input type="text" id="ratio-input" class="form-control" placeholder="Enter Ratios separated by commas" required>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="shade-input">Shades (e.g., A,B,C):</label>
+                    <input type="text" id="shade-input" class="form-control" placeholder="Enter Shades separated by commas" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-success" onclick="downloadExcel()">Download Excel</button>
+        </form>
 
-    return data.map(row => {
-        const key = `${row.size}-${row.ratio}`;
-        if (!sizeRatioMap[key]) {
-            sizeRatioMap[key] = alphabet[nextAlphabetIndex++];
-            if (nextAlphabetIndex >= alphabet.length) {
-                nextAlphabetIndex = 0; // Loop back if we run out of letters
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>
+                        Size
+                        <button class="btn btn-link" onclick="sortTable('size')">Sort</button>
+                    </th>
+                    <th>
+                        Ratio
+                        <button class="btn btn-link" onclick="sortTable('ratio')">Sort</button>
+                    </th>
+                    <th>Shade</th>
+                    <th>Group</th>
+                    <th>Shade&Group</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="bg-dark text-white mt-4">
+        <div class="container d-flex justify-content-between py-3">
+            <div>All rights reserved by WebRiaj</div>
+            <div>Tracki8 by Solvei8</div>
+        </div>
+    </footer>
+
+    <script>
+        const correctUsername = "ba_adtl";
+        const correctPassword = "123";
+
+        // Prompt for username and password
+        function promptCredentials() {
+            const username = prompt("Enter username:");
+            const password = prompt("Enter password:");
+
+            if (username === correctUsername && password === correctPassword) {
+                document.body.classList.remove("hidden"); // Show content
+            } else {
+                alert("Incorrect username or password.");
+                window.location.reload(); // Reload the page on failure
             }
         }
-        return {
-            ...row,
-            newColumn: sizeRatioMap[key]
-        };
-    });
-}
 
-function renderTable(data) {
-    const tableBody = document.querySelector('#data-table tbody');
-    tableBody.innerHTML = ''; // Clear any existing rows
+        promptCredentials();
 
-    data.forEach(row => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${row.size}</td>
-            <td>${row.ratio}</td>
-            <td>${row.shade}</td>
-            <td>${row.newColumn}</td>
-        `;
-        tableBody.appendChild(tr);
-    });
-}
+        let globalData = [];
+        let sortedBySizeAsc = true;
+        let sortedByRatioAsc = true;
 
-document.getElementById('input-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form submission
+        function assignAlphabetToSizeRatio(data) {
+            const sizeRatioMap = {};
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let nextAlphabetIndex = 0;
 
-    // Get input values
-    const sizeInput = document.getElementById('size-input').value;
-    const ratioInput = document.getElementById('ratio-input').value;
-    const shadeInput = document.getElementById('shade-input').value;
+            return data.map(row => {
+                const key = `${row.size}-${row.ratio}`;
+                if (!sizeRatioMap[key]) {
+                    sizeRatioMap[key] = alphabet[nextAlphabetIndex++];
+                    if (nextAlphabetIndex >= alphabet.length) {
+                        nextAlphabetIndex = 0; // Loop back if we run out of letters
+                    }
+                }
+                return {
+                    ...row,
+                    newColumn: sizeRatioMap[key]
+                };
+            });
+        }
 
-    // Split inputs into arrays
-    const sizes = sizeInput.split(',').map(size => size.trim());
-    const ratios = ratioInput.split(',').map(ratio => parseInt(ratio.trim(), 10));
-    const shades = shadeInput.split(',').map(shade => shade.trim());
+        function renderTable(data) {
+            const tableBody = document.querySelector('#data-table tbody');
+            tableBody.innerHTML = ''; // Clear any existing rows
 
-    // Ensure sizes, ratios and shades arrays have appropriate lengths
-    if (sizes.length !== ratios.length) {
-        alert('Sizes and Ratios must have the same number of entries.');
-        return;
-    }
-    if (shades.length === 0) {
-        alert('Shades must have at least one entry.');
-        return;
-    }
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.size}</td>
+                    <td>${row.ratio}</td>
+                    <td>${row.shade}</td>
+                    <td>${row.newColumn}</td>
+                    <td>${row.shade + '-' + row.newColumn}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
 
-    // Parse input into data array with deviation and shade handling
-    const data = sizes.flatMap((size, index) => {
-        const ratio = ratios[index];
-        // For each size-ratio combination, repeat for each shade
-        return shades.flatMap(shade => 
-            Array.from({ length: ratio }, (_, idx) => ({
-                size,
-                ratio: idx + 1,
-                shade
-            }))
-        );
-    });
+        function sortTable(column) {
+            if (column === 'size') {
+                globalData.sort((a, b) => {
+                    return sortedBySizeAsc ? a.size.localeCompare(b.size) : b.size.localeCompare(a.size);
+                });
+                sortedBySizeAsc = !sortedBySizeAsc;
+            } else if (column === 'ratio') {
+                globalData.sort((a, b) => {
+                    return sortedByRatioAsc ? a.ratio - b.ratio : b.ratio - a.ratio;
+                });
+                sortedByRatioAsc = !sortedByRatioAsc;
+            }
+            renderTable(globalData);
+        }
 
-    // Assign alphabets and render table
-    const updatedData = assignAlphabetToSizeRatio(data);
-    renderTable(updatedData);
-});
-document.getElementById('downloadExcel').addEventListener('click', function () {
-    // Get the table element
-    var wb = XLSX.utils.table_to_book(document.getElementById('data-table'), { sheet: "Sheet1" });
-    
-    // Convert the workbook to binary string
-    var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
-    
-    // Convert binary string to array buffer
-    function s2ab(s) {
-        var buf = new ArrayBuffer(s.length);
-        var view = new Uint8Array(buf);
-        for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
-        return buf;
-    }
+        function downloadExcel() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            const headers = ["Size", "Ratio", "Shade", "Group", "Shade&Group"];
+            csvContent += headers.join(",") + "\n";
 
-    // Create a Blob from the array buffer
-    var blob = new Blob([s2ab(wbout)], { type: "application/octet-stream" });
-    
-    // Create a link element to download the file
-    var link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'group_Sheet.xlsx'; // Set the filename for the download
-    link.click(); // Trigger the download
-});
-//Download PDF
-document.getElementById("downloadPDF").addEventListener("click", function() {
-  const { jsPDF } = window.jspdf;  // Get jsPDF from the library
-  const doc = new jsPDF();
-  
-  doc.text("Group Summary", 14, 16);  // Add title or header to your PDF
-  
-  // Auto-table plugin to add the table into the PDF
-  doc.autoTable({
-      html: '#data-table',  // Target the table by ID
-      startY: 20,  // Start position after the title
-  });
-  
-  doc.save('group_summary.pdf');  // Save the PDF with the desired file name
-});
+            globalData.forEach(row => {
+                const rowData = [row.size, row.ratio, row.shade, row.newColumn, row.shade + '-' + row.newColumn];
+                csvContent += rowData.join(",") + "\n";
+            });
 
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "table_data.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        document.getElementById('input-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get input values
+            const sizeInput = document.getElementById('size-input').value;
+            const ratioInput = document.getElementById('ratio-input').value;
+            const shadeInput = document.getElementById('shade-input').value;
+
+            // Split inputs into arrays
+            const sizes = sizeInput.split(',').map(size => size.trim());
+            const ratios = ratioInput.split(',').map(ratio => parseInt(ratio.trim(), 10));
+            const shades = shadeInput.split(',').map(shade => shade.trim());
+
+            // Ensure sizes, ratios, and shades arrays have appropriate lengths
+            if (sizes.length !== ratios.length) {
+                alert('Sizes and Ratios must have the same number of entries.');
+                return;
+            }
+            if (shades.length === 0) {
+                alert('Shades must have at least one entry.');
+                return;
+            }
+
+            // Parse input into data array with deviation and shade handling
+            const data = sizes.flatMap((size, index) => {
+                const ratio = ratios[index];
+                // For each size-ratio combination, repeat for each shade
+                return shades.flatMap(shade => 
+                    Array.from({ length: ratio }, (_, idx) => ({
+                        size,
+                        ratio: idx + 1,
+                        shade
+                    }))
+                );
+            });
+
+            // Assign alphabets and render table
+            globalData = assignAlphabetToSizeRatio(data);
+            renderTable(globalData);
+        });
     </script>
-      <!-- Vendor JS Files -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ppJv0u+jcKZi1TLua2tp0SmBbpIwr+1y4eEy5swNCTAMe/GE1oFkpT3DzoGbbc7+" crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </body>
 </html>
