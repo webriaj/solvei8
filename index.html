@@ -70,8 +70,8 @@
                         <button class="btn btn-link" onclick="sortTable('ratio')">Sort</button>
                     </th>
                     <th>Shade</th>
-                    <th>Group</th>
                     <th>Shade&Group</th>
+                    <th>Group</th>
                 </tr>
             </thead>
             <tbody>
@@ -140,8 +140,8 @@
                     <td>${row.size}</td>
                     <td>${row.ratio}</td>
                     <td>${row.shade}</td>
-                    <td>${row.newColumn}</td>
                     <td>${row.shade + '-' + row.newColumn}</td>
+                    <td>${row.newColumn}</td>
                 `;
                 tableBody.appendChild(tr);
             });
