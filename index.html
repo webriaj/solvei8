@@ -1,250 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Size-Ratio-Shade Table</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        button {
-            margin-top: 10px;
-        }
-        .form-control {
-            transition: border-color 0.3s;
-        }
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        }
-        .hidden {
-            display: none;
-        }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      button {
+        margin-top: 10px;
+      }
+
+      .form-control {
+        transition: border-color 0.3s;
+      }
+
+      .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      }
+
+      .hidden {
+        display: none;
+      }
     </style>
-</head>
-<body class="hidden">
-    <h1 class="text-center bg-dark text-white p-3">Tracki8 Tag Gen Helper</h1>
+  </head>
+  <body class="hidden">
     <div class="container">
-        <form id="input-form" class="mb-4">
-            <div class="row">
-            <div class="col-md-3 form-group">
-    <label for="po-input">PO:</label>
-    <input type="text" id="po-input" class="form-control" placeholder="Enter PO numbers separated by commas" required>
-</div>
-<div class="col-md-3 form-group">
-    <label for="color-input">Color:</label>
-    <input type="text" id="color-input" class="form-control" placeholder="Enter Colors separated by commas" required>
-</div>
-
-                <div class="col-md-3 form-group">
-                    <label for="size-input">Size (e.g., S, M, L):</label>
-                    <input type="text" id="size-input" class="form-control" placeholder="Enter Sizes separated by commas" required>
-                </div>
-                <div class="col-md-3 form-group">
-                    <label for="ratio-input">Ratio (e.g., 2, 1, 2):</label>
-                    <input type="text" id="ratio-input" class="form-control" placeholder="Enter Ratios separated by commas" required>
-                </div>
-                <div class="col-md-3 form-group">
-                    <label for="shade-input">Shades (e.g., A, B, C):</label>
-                    <input type="text" id="shade-input" class="form-control" placeholder="Enter Shades separated by commas" required>
-                </div>
-                <div class="col-md-3 form-group">
-                    <label for="qty-input">Qty (e.g., 14, 15, 10):</label>
-                    <input type="text" id="qty-input" class="form-control" placeholder="Enter Quantities separated by commas" required>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <button type="button" class="btn btn-success" onclick="downloadExcel()">Download Excel</button>
-        </form>
-
-        <table id="data-table">
-            <thead>
-                <tr>
-                	<th>PO</th>
-                    <th>Color</th>
-                    <th>Size
-                        <button class="btn btn-link" onclick="sortTable('size')">Sort</button>
-                    </th>
-                    <th>Shade&Group</th>
-                    <th>Qty</th>
-                    <th>Ratio
-                        <button class="btn btn-link" onclick="sortTable('ratio')">Sort</button>
-                    </th>
-                    <th>Shade</th>
-                    <th>Group</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Rows will be inserted here by JavaScript -->
-            </tbody>
-        </table>
-    </div>
-
-    <footer class="bg-dark text-white mt-4">
-        <div class="container d-flex justify-content-between py-3">
-            <div>All rights reserved by WebRiaj</div>
-            <div>Tracki8 by Solvei8</div>
+      <h1 class="text-center bg-dark text-white p-3">Tracki8 Tag Gen Helper</h1>
+      <form id="input-form" class="mb-4">
+        <div class="row">
+          <div class="col-md-3 form-group">
+            <label for="po-input">PO:</label>
+            <input type="text" id="po-input" class="form-control" placeholder="Enter PO numbers separated by commas" required>
+          </div>
+          <div class="col-md-3 form-group">
+            <label for="color-input">Color:</label>
+            <input type="text" id="color-input" class="form-control" placeholder="Enter Colors separated by commas" required>
+          </div>
+          <div class="col-md-3 form-group">
+            <label for="size-input">Size (e.g., S, M, L):</label>
+            <input type="text" id="size-input" class="form-control" placeholder="Enter Sizes separated by commas" required>
+          </div>
+          <div class="col-md-3 form-group">
+            <label for="ratio-input">Ratio (e.g., 2, 1, 2):</label>
+            <input type="text" id="ratio-input" class="form-control" placeholder="Enter Ratios separated by commas" required>
+          </div>
+          <div class="col-md-3 form-group">
+            <label for="shade-input">Shades (e.g., A, B, C):</label>
+            <input type="text" id="shade-input" class="form-control" placeholder="Enter Shades separated by commas" required>
+          </div>
+          <div class="col-md-3 form-group">
+            <label for="qty-input">Qty (e.g., 14, 15, 10):</label>
+            <input type="text" id="qty-input" class="form-control" placeholder="Enter Quantities separated by commas" required>
+          </div>
         </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-success" onclick="downloadExcel()">Download Excel</button>
+      </form>
+      <table id="data-table">
+        <thead>
+          <tr>
+            <th>PO</th>
+            <th>Color</th>
+            <th>Size <button class="btn btn-link" onclick="sortTable('size')">Sort</button>
+            </th>
+            <th>Shade&Group</th>
+            <th>Qty</th>
+            <th>Ratio <button class="btn btn-link" onclick="sortTable('ratio')">Sort</button>
+            </th>
+            <th>Shade</th>
+            <th>Group <button class="btn btn-link" onclick="sortTable('group')">Sort</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows will be inserted here by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+    <footer class="bg-dark text-white mt-4">
+      <div class="container d-flex justify-content-between py-3">
+        <div>All rights reserved by WebRiaj</div>
+        <div>Tracki8 by Solvei8</div>
+      </div>
     </footer>
-
     <script>
-        const correctUsername = "ba_adtl";
-        const correctPassword = "123";
+      const correctUsername = "ba_adtl";
+      const correctPassword = "123";
+      // Prompt for username and password
+      function promptCredentials() {
+        const username = prompt("Enter username:");
+        const password = prompt("Enter password:");
+        if (username === correctUsername && password === correctPassword) {
+          document.body.classList.remove("hidden"); // Show content
+        } else {
+          alert("Incorrect username or password.");
+          window.location.reload(); // Reload the page on failure
+        }
+      }
+      promptCredentials();
+      let globalData = [];
+      let sortedBySizeAsc = true;
+      let sortedByRatioAsc = true;
+      let sortedByGroupAsc = true;
 
-        // Prompt for username and password
-        function promptCredentials() {
-            const username = prompt("Enter username:");
-            const password = prompt("Enter password:");
-
-            if (username === correctUsername && password === correctPassword) {
-                document.body.classList.remove("hidden"); // Show content
-            } else {
-                alert("Incorrect username or password.");
-                window.location.reload(); // Reload the page on failure
+      function assignAlphabetToSizeRatio(data) {
+        const sizeRatioMap = {};
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let nextAlphabetIndex = 0;
+        return data.map(row => {
+          const key = `${row.size}-${row.ratio}`;
+          if (!sizeRatioMap[key]) {
+            sizeRatioMap[key] = alphabet[nextAlphabetIndex++];
+            if (nextAlphabetIndex >= alphabet.length) {
+              nextAlphabetIndex = 0; // Loop back if we run out of letters
             }
-        }
+          }
+          return {
+            ...row,
+            newColumn: sizeRatioMap[key]
+          };
+        });
+      }
 
-        promptCredentials();
-
-        let globalData = [];
-        let sortedBySizeAsc = true;
-        let sortedByRatioAsc = true;
-
-        function assignAlphabetToSizeRatio(data) {
-            const sizeRatioMap = {};
-            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            let nextAlphabetIndex = 0;
-
-            return data.map(row => {
-                const key = `${row.size}-${row.ratio}`;
-                if (!sizeRatioMap[key]) {
-                    sizeRatioMap[key] = alphabet[nextAlphabetIndex++];
-                    if (nextAlphabetIndex >= alphabet.length) {
-                        nextAlphabetIndex = 0; // Loop back if we run out of letters
-                    }
-                }
-                return {
-                    ...row,
-                    newColumn: sizeRatioMap[key]
-                };
-            });
-        }
-
-        function renderTable(data) {
-            const tableBody = document.querySelector('#data-table tbody');
-            tableBody.innerHTML = ''; // Clear any existing rows
-
-            data.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${row.po}</td>
-    				<td>${row.color}</td>
-                    <td>${row.size}</td>
-                    <td>${row.shade + '-' + row.newColumn}</td>
-                    <td>${row.qty}</td>
-                    <td>${row.ratio}</td>
-                    <td>${row.shade}</td>
-                    <td>${row.newColumn}</td>
+      function renderTable(data) {
+        const tableBody = document.querySelector('#data-table tbody');
+        tableBody.innerHTML = ''; // Clear any existing rows
+        data.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+                    
+												<td>${row.po}</td>
+												<td>${row.color}</td>
+												<td>${row.size}</td>
+												<td>${row.shade + '-' + row.newColumn}</td>
+												<td>${row.qty}</td>
+												<td>${row.ratio}</td>
+												<td>${row.shade}</td>
+												<td>${row.newColumn}</td>
                 `;
-                tableBody.appendChild(tr);
-            });
+          tableBody.appendChild(tr);
+        });
+      }
+
+      function sortTable(column) {
+        if (column === 'size') {
+          globalData.sort((a, b) => {
+            return sortedBySizeAsc ? a.size.localeCompare(b.size) : b.size.localeCompare(a.size);
+          });
+          sortedBySizeAsc = !sortedBySizeAsc;
+        } else if (column === 'ratio') {
+          globalData.sort((a, b) => {
+            return sortedByRatioAsc ? a.ratio - b.ratio : b.ratio - a.ratio;
+          });
+          sortedByRatioAsc = !sortedByRatioAsc;
+        } else if (column === 'group') {
+          globalData.sort((a, b) => {
+            return sortedByGroupAsc ? a.newColumn.localeCompare(b.newColumn) : b.newColumn.localeCompare(a.newColumn);
+          });
+          sortedByGroupAsc = !sortedByGroupAsc;
         }
+        renderTable(globalData);
+      }
 
-        function sortTable(column) {
-            if (column === 'size') {
-                globalData.sort((a, b) => {
-                    return sortedBySizeAsc ? a.size.localeCompare(b.size) : b.size.localeCompare(a.size);
-                });
-                sortedBySizeAsc = !sortedBySizeAsc;
-            } else if (column === 'ratio') {
-                globalData.sort((a, b) => {
-                    return sortedByRatioAsc ? a.ratio - b.ratio : b.ratio - a.ratio;
-                });
-                sortedByRatioAsc = !sortedByRatioAsc;
-            }
-            renderTable(globalData);
+      function downloadExcel() {
+        let csvContent = "data:text/csv;charset=utf-8,";
+        const headers = ["PO", "Color", "Size", "Shade&Group", "Qty", "Ratio", "Shade", "Group"];
+        csvContent += headers.join(",") + "\n";
+        globalData.forEach(row => {
+          const rowData = [row.po, row.color, row.size, row.shade + '-' + row.newColumn, row.qty, row.ratio, row.shade, row.newColumn];
+          csvContent += rowData.join(",") + "\n";
+        });
+        const poNumber = document.getElementById('po-input').value.trim(); // Get the PO number
+        const filename = `${poNumber}_tag_gen.csv`; // Create the filename
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", filename); // Use the new filename
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+      document.getElementById('input-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+        // Get input values
+        const sizeInput = document.getElementById('size-input').value;
+        const ratioInput = document.getElementById('ratio-input').value;
+        const shadeInput = document.getElementById('shade-input').value;
+        const qtyInput = document.getElementById('qty-input').value;
+        const poInput = document.getElementById('po-input').value.trim(); // Single PO input
+        const colorInput = document.getElementById('color-input').value.trim(); // Single Color input
+        // Split inputs into arrays
+        const sizes = sizeInput.split(',').map(size => size.trim());
+        const ratios = ratioInput.split(',').map(ratio => parseInt(ratio.trim(), 10));
+        const shades = shadeInput.split(',').map(shade => shade.trim());
+        const quantities = qtyInput.split(',').map(qty => parseInt(qty.trim(), 10));
+        // Ensure sizes, ratios, shades, and quantities arrays have appropriate lengths
+        if (sizes.length !== ratios.length) {
+          alert('Sizes and Ratios must have the same number of entries.');
+          return;
         }
-
-        function downloadExcel() {
-    let csvContent = "data:text/csv;charset=utf-8,";
-    const headers = ["PO", "Color", "Size", "Shade&Group", "Qty", "Ratio", "Shade", "Group"];
-    csvContent += headers.join(",") + "\n";
-
-    globalData.forEach(row => {
-        const rowData = [row.po, row.color, row.size, row.shade + '-' + row.newColumn, row.qty, row.ratio, row.shade, row.newColumn];
-        csvContent += rowData.join(",") + "\n";
-    });
-
-    const poNumber = document.getElementById('po-input').value.trim(); // Get the PO number
-    const filename = `${poNumber}_tag_gen.csv`; // Create the filename
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", filename); // Use the new filename
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
-
-        document.getElementById('input-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
-
-            // Get input values
-const sizeInput = document.getElementById('size-input').value;
-const ratioInput = document.getElementById('ratio-input').value;
-const shadeInput = document.getElementById('shade-input').value;
-const qtyInput = document.getElementById('qty-input').value;
-const poInput = document.getElementById('po-input').value.trim(); // Single PO input
-const colorInput = document.getElementById('color-input').value.trim(); // Single Color input
-
-// Split inputs into arrays
-const sizes = sizeInput.split(',').map(size => size.trim());
-const ratios = ratioInput.split(',').map(ratio => parseInt(ratio.trim(), 10));
-const shades = shadeInput.split(',').map(shade => shade.trim());
-const quantities = qtyInput.split(',').map(qty => parseInt(qty.trim(), 10));
-
-// Ensure sizes, ratios, shades, and quantities arrays have appropriate lengths
-if (sizes.length !== ratios.length) {
-    alert('Sizes and Ratios must have the same number of entries.');
-    return;
-}
-if (shades.length !== quantities.length) {
-    alert('Shades and Quantities must have the same number of entries.');
-    return;
-}
-
-// Parse input into data array with single PO and Color handling
-const data = sizes.flatMap((size, index) => {
-    const ratio = ratios[index];
-    return shades.flatMap((shade, shadeIndex) => 
-        Array.from({ length: ratio }, (_, idx) => ({
+        if (shades.length !== quantities.length) {
+          alert('Shades and Quantities must have the same number of entries.');
+          return;
+        }
+        // Parse input into data array with single PO and Color handling
+        const data = sizes.flatMap((size, index) => {
+          const ratio = ratios[index];
+          return shades.flatMap((shade, shadeIndex) => Array.from({
+            length: ratio
+          }, (_, idx) => ({
             size,
             ratio: idx + 1,
             shade,
             qty: quantities[shadeIndex], // Qty based on the shade index
             po: poInput, // Use single PO
             color: colorInput // Use single Color
-        }))
-    );
-});
-
-            globalData = assignAlphabetToSizeRatio(data);
-            renderTable(globalData);
+          })));
         });
+        globalData = assignAlphabetToSizeRatio(data);
+        renderTable(globalData);
+      });
     </script>
-</body>
+  </body>
 </html>
